@@ -15,6 +15,14 @@ h1{font-size:28px;margin:0 0 4px} .sotto{color:var(--muted);margin:0 0 22px}
 footer{color:var(--muted);font-size:13px;line-height:1.5;margin-top:26px}
 </style></head><body><main>
 <h1>I prodotti dei video 👇</h1><p class="sotto">Il più recente è in alto. Prezzi sempre aggiornati su Amazon.</p>
-<p>In arrivo.</p>
+<div id="elenco"><p>Caricamento…</p></div>
 <footer>In qualità di Affiliato Amazon ricevo un guadagno dagli acquisti idonei. Le immagini sono illustrazioni indicative create per i video.</footer>
-</main></body></html>
+</main>
+<script>
+const esc = (t) => String(t).replace(/[&<>"']/g, (c) => ({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]));
+fetch("https://affiliate-automation.noramarket-0f9e.workers.dev/prodotti.json", {cache: "no-store"}).then((r) => r.json()).then((v) => {
+  document.getElementById("elenco").innerHTML = v.length ? v.map((p) => `<a class="scheda" href="${esc(p.link)}" rel="sponsored nofollow noopener" target="_blank">
+    ${p.img ? `<img src="${esc(p.img)}" alt="" loading="lazy">` : '<div class="img"></div>'}
+    <div class="testo"><div class="nome">${esc(p.nome)}</div><div class="cta">Vedi su Amazon →</div></div></a>`).join("") : "<p>In arrivo.</p>";
+}).catch(() => { document.getElementById("elenco").innerHTML = "<p>Ricarica la pagina tra poco.</p>"; });
+</script></body></html>

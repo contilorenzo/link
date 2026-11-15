@@ -20,8 +20,11 @@ footer{color:var(--muted);font-size:13px;line-height:1.5;margin-top:26px}
 </main>
 <script>
 const esc = (t) => String(t).replace(/[&<>"']/g, (c) => ({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]));
+const ev = (t, asin) => { try { navigator.sendBeacon("https://affiliate-automation.noramarket-0f9e.workers.dev/evento", new Blob([JSON.stringify({t, asin})], {type: "text/plain"})); } catch (e) {} };
+ev("visita");
+document.addEventListener("click", (e) => { const a = e.target.closest("a.scheda"); if (a) ev("click", a.dataset.asin); });
 fetch("https://affiliate-automation.noramarket-0f9e.workers.dev/prodotti.json", {cache: "no-store"}).then((r) => r.json()).then((v) => {
-  document.getElementById("elenco").innerHTML = v.length ? v.map((p) => `<a class="scheda" href="${esc(p.link)}" rel="sponsored nofollow noopener" target="_blank">
+  document.getElementById("elenco").innerHTML = v.length ? v.map((p) => `<a class="scheda" data-asin="${esc(p.asin)}" href="${esc(p.link)}" rel="sponsored nofollow noopener" target="_blank">
     ${p.img ? `<img src="${esc(p.img)}" alt="" loading="lazy">` : '<div class="img"></div>'}
     <div class="testo"><div class="nome">${esc(p.nome)}</div><div class="cta">Vedi su Amazon →</div></div></a>`).join("") : "<p>In arrivo.</p>";
 }).catch(() => { document.getElementById("elenco").innerHTML = "<p>Ricarica la pagina tra poco.</p>"; });

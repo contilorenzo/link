@@ -50,7 +50,12 @@ const soc = /Instagram/i.test(ua) ? "ig" : /FBAN|FBAV|FB_IAB/i.test(ua) ? "fb" :
 const conTag = (l) => soc ? String(l).replace("tag=noramarket-21", `tag=noramarket-${soc}-21`) : l;  // un tag Amazon per social
 const ev = (t, asin) => { try { navigator.sendBeacon("https://affiliate-automation.noramarket-0f9e.workers.dev/evento", new Blob([JSON.stringify({t, asin, r: document.referrer || ""})], {type: "text/plain"})); } catch (e) {} };
 ev("visita");
-document.addEventListener("click", (e) => { const a = e.target.closest("a[data-asin]"); if (a) ev("click", a.dataset.asin); });
+// il click si registra già al tocco: nei browser di Instagram/TikTok l'apertura dell'app Amazon chiude la pagina prima del beacon
+let ultimoClick = 0;
+const segnaClick = (e) => { const a = e.target.closest("a[data-asin]"); if (!a || Date.now() - ultimoClick < 1500) return; ultimoClick = Date.now();
+  ev("click", a.dataset.asin); };
+document.addEventListener("pointerdown", segnaClick);
+document.addEventListener("click", segnaClick);
 const lnk = (p, cls, inner) => `<a class="${cls}" data-asin="${esc(p.asin)}" href="${esc(conTag(p.link))}" rel="sponsored nofollow noopener" target="_blank">${inner}</a>`;
 const img = (p) => p.img ? `<img src="${esc(p.img)}" alt="" loading="lazy">` : '<div class="img"></div>';
 fetch("https://affiliate-automation.noramarket-0f9e.workers.dev/offerte.json", {cache: "no-store"}).then((r) => r.json()).then((o) => {

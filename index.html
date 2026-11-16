@@ -48,7 +48,11 @@ const esc = (t) => String(t).replace(/[&<>"']/g, (c) => ({"&":"&amp;","<":"&lt;"
 const ua = navigator.userAgent;
 const soc = /Instagram/i.test(ua) ? "ig" : /FBAN|FBAV|FB_IAB/i.test(ua) ? "fb" : /musical_ly|TikTok|Bytedance/i.test(ua) ? "tt" : /YouTube|com\.google\.android\.youtube/i.test(ua) ? "yt" : "";
 const conTag = (l) => soc ? String(l).replace("tag=noramarket-21", `tag=noramarket-${soc}-21`) : l;  // un tag Amazon per social
-const ev = (t, asin) => { try { navigator.sendBeacon("https://affiliate-automation.noramarket-0f9e.workers.dev/evento", new Blob([JSON.stringify({t, asin, r: document.referrer || ""})], {type: "text/plain"})); } catch (e) {} };
+// visite nostre escluse dalle metriche: dispositivo segnato aprendo la regia o una volta noramarkets.it/?io=1 (?io=0 per togliere)
+const interno = (() => { try { const q = new URLSearchParams(location.search).get("io");
+  if (q === "1") localStorage.setItem("interno", "1"); if (q === "0") localStorage.removeItem("interno");
+  return localStorage.getItem("interno") === "1"; } catch (e) { return false; } })();
+const ev = (t, asin) => { if (interno) return; try { navigator.sendBeacon("https://affiliate-automation.noramarket-0f9e.workers.dev/evento", new Blob([JSON.stringify({t, asin, r: document.referrer || ""})], {type: "text/plain"})); } catch (e) {} };
 ev("visita");
 // il click si registra già al tocco: nei browser di Instagram/TikTok l'apertura dell'app Amazon chiude la pagina prima del beacon
 let ultimoClick = 0;

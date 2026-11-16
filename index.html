@@ -1,22 +1,47 @@
 <!doctype html>
 <html lang="it"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
-<title>I prodotti dei video</title>
+<title>Nora Markets</title><meta name="theme-color" content="#1a1028">
 <link rel="preconnect" href="https://fonts.googleapis.com"><link href="https://fonts.googleapis.com/css2?family=Fredoka:wght@500;600;700&display=swap" rel="stylesheet">
 <style>
-:root{--bg:#FFF4E6;--ink:#2B2D42;--card:#fff;--accent:#FFC93C;--muted:#6b6f86}
-@media (prefers-color-scheme:dark){:root{--bg:#1a1028;--ink:#f4efe6;--card:#2a2046;--muted:#b8b0cc}}
-*{box-sizing:border-box} body{margin:0;background:var(--bg);color:var(--ink);font-family:Fredoka,system-ui,sans-serif}
-main{max-width:560px;margin:0 auto;padding:28px 16px 40px}
-h1{font-size:28px;margin:0 0 4px} .sotto{color:var(--muted);margin:0 0 22px}
-.scheda{display:flex;gap:14px;align-items:center;background:var(--card);border:3px solid var(--ink);border-radius:20px;padding:10px;margin-bottom:14px;color:inherit;text-decoration:none;box-shadow:0 5px 0 var(--ink)}
-.scheda:active{transform:translateY(3px);box-shadow:0 2px 0 var(--ink)}
-.scheda img,.scheda .img{width:88px;height:88px;border-radius:14px;object-fit:cover;background:var(--accent);flex:none}
-.nome{font-weight:600;font-size:18px;line-height:1.2} .cta{margin-top:6px;font-weight:700;color:#d1495b}
-footer{color:var(--muted);font-size:13px;line-height:1.5;margin-top:26px}
+:root{--bg:#1d1433;--ink:#2B2D42;--txt:#f4efe6;--card:#fff;--accent:#FFC93C;--muted:#b8b0cc;--corallo:#FF6B5B}
+*{box-sizing:border-box} html{background:var(--bg)}
+body{margin:0;color:var(--txt);font-family:Fredoka,system-ui,sans-serif;min-height:100vh;
+ background:radial-gradient(circle at 50% 18%,#3a2a63 0%,var(--bg) 65%) fixed}
+body::before{content:"";position:fixed;inset:0;pointer-events:none;filter:blur(6px);
+ background:repeating-conic-gradient(from 0deg at 50% 18%,#ffffff00 0deg,#ffffff14 6deg,#ffffff00 12deg,#ffffff00 18deg);
+ -webkit-mask-image:radial-gradient(circle at 50% 18%,transparent 4%,black 45%);mask-image:radial-gradient(circle at 50% 18%,transparent 4%,black 45%)}
+main{position:relative;max-width:560px;margin:0 auto;padding:22px 16px 40px}
+header{display:flex;align-items:center;gap:12px;margin-bottom:12px}
+header img{width:58px;height:58px;border-radius:50%;border:3px solid var(--accent);background:var(--accent)}
+h1{font-size:25px;margin:0} .sotto{color:var(--muted);margin:2px 0 0;font-size:14px}
+h2{font-size:20px;margin:26px 0 2px;display:flex;align-items:baseline;gap:8px;flex-wrap:wrap} h2 small{font-weight:500;font-size:13px;color:var(--muted)}
+.ink{color:var(--ink)}
+.fila{display:flex;gap:12px;overflow-x:auto;padding:14px 16px 12px;margin:0 -16px;scroll-snap-type:x mandatory}
+.fila::-webkit-scrollbar{display:none}
+.off{flex:none;width:158px;scroll-snap-align:start;position:relative;background:var(--card);border:3px solid var(--ink);border-radius:18px;padding:10px;box-shadow:0 4px 0 #0008;color:var(--ink);text-decoration:none}
+.off img{width:100%;height:118px;object-fit:contain}
+.badge{position:absolute;right:-8px;top:-10px;background:var(--corallo);color:#fff;border:3px solid var(--ink);border-radius:999px;padding:1px 9px;font-weight:700;font-size:15px;transform:rotate(6deg)}
+.off .n{font-weight:600;font-size:15px;line-height:1.15;height:35px;overflow:hidden}
+.off .p{font-weight:700;font-size:20px;margin-top:4px} .off s{color:#6b6f86;font-size:13px;text-decoration-color:var(--corallo);text-decoration-thickness:2px}
+.griglia{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:12px;margin-top:12px}
+.vid{background:var(--card);border:3px solid var(--ink);border-radius:18px;overflow:hidden;box-shadow:0 4px 0 #0008;color:var(--ink);text-decoration:none}
+.vid img,.vid .img{width:100%;aspect-ratio:1;object-fit:cover;object-position:35% 60%;display:block;background:var(--accent);border-bottom:3px solid var(--ink)}
+.vid div{padding:8px 10px 10px;font-weight:600;font-size:15px;line-height:1.15} .vid b{display:block;color:#d1495b;font-size:13px;margin-top:4px}
+.cerca{width:100%;margin-top:12px;padding:12px 14px;font:inherit;font-size:16px;border:3px solid var(--ink);border-radius:14px;background:var(--card);color:var(--ink)}
+.chips{display:flex;gap:8px;overflow-x:auto;padding:10px 0 2px}.chips::-webkit-scrollbar{display:none}
+.chip{flex:none;padding:6px 12px;border:2px solid var(--txt);border-radius:999px;font-weight:600;font-size:14px;cursor:pointer}
+.chip.on{background:var(--txt);color:var(--bg)}
+.riga{display:flex;gap:12px;align-items:center;background:var(--card);border:2px solid var(--ink);border-radius:14px;padding:8px;margin-top:10px;color:var(--ink);text-decoration:none}
+.riga img,.riga .img{width:52px;height:52px;border-radius:10px;object-fit:cover;flex:none;background:var(--accent)} .riga span{font-weight:600}
+.vuoto{color:var(--muted);font-size:14px;margin-top:10px}
+footer{color:var(--muted);font-size:12px;line-height:1.5;margin-top:30px}
 </style></head><body><main>
-<h1>I prodotti dei video 👇</h1><p class="sotto">Il più recente è in alto. Prezzi sempre aggiornati su Amazon.</p>
-<div id="elenco"><p>Caricamento…</p></div>
-<footer>In qualità di Affiliato Amazon ricevo un guadagno dagli acquisti idonei. Le immagini sono illustrazioni indicative create per i video.</footer>
+<header><img src="https://affiliate-automation.noramarket-0f9e.workers.dev/img/nora-avatar.jpg" alt=""><div><h1>Nora Markets</h1><p class="sotto">I prodotti dei miei video e le offerte del giorno</p></div></header>
+<section id="s-off" hidden><h2>🔥 Offerte di oggi <small id="ril"></small></h2><div class="fila" id="offerte"></div></section>
+<h2>🎬 Dagli ultimi video</h2><div class="griglia" id="ultimi"><p class="vuoto">Caricamento…</p></div>
+<h2>🔎 Tutti i prodotti</h2>
+<input class="cerca" id="q" placeholder="Cerca un prodotto…"><div class="chips" id="chips"></div><div id="arch"></div>
+<footer>In qualità di Affiliato Amazon ricevo un guadagno dagli acquisti idonei. Le immagini sono illustrazioni indicative. I prezzi delle offerte sono quelli rilevati all'orario indicato e possono cambiare: fa fede il prezzo su Amazon.</footer>
 </main>
 <script>
 const esc = (t) => String(t).replace(/[&<>"']/g, (c) => ({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]));
@@ -25,10 +50,29 @@ const soc = /Instagram/i.test(ua) ? "ig" : /FBAN|FBAV|FB_IAB/i.test(ua) ? "fb" :
 const conTag = (l) => soc ? String(l).replace("tag=noramarket-21", `tag=noramarket-${soc}-21`) : l;  // un tag Amazon per social
 const ev = (t, asin) => { try { navigator.sendBeacon("https://affiliate-automation.noramarket-0f9e.workers.dev/evento", new Blob([JSON.stringify({t, asin, r: document.referrer || ""})], {type: "text/plain"})); } catch (e) {} };
 ev("visita");
-document.addEventListener("click", (e) => { const a = e.target.closest("a.scheda"); if (a) ev("click", a.dataset.asin); });
+document.addEventListener("click", (e) => { const a = e.target.closest("a[data-asin]"); if (a) ev("click", a.dataset.asin); });
+const lnk = (p, cls, inner) => `<a class="${cls}" data-asin="${esc(p.asin)}" href="${esc(conTag(p.link))}" rel="sponsored nofollow noopener" target="_blank">${inner}</a>`;
+const img = (p) => p.img ? `<img src="${esc(p.img)}" alt="" loading="lazy">` : '<div class="img"></div>';
+fetch("https://affiliate-automation.noramarket-0f9e.workers.dev/offerte.json", {cache: "no-store"}).then((r) => r.json()).then((o) => {
+  if (!o.prodotti?.length) return;
+  document.getElementById("s-off").hidden = false;
+  document.getElementById("ril").textContent = "prezzi del " + o.rilevato;
+  document.getElementById("offerte").innerHTML = o.prodotti.map((p) => lnk(p, "off", `<span class="badge">-${p.sconto}%</span>${img(p)}<div class="n">${esc(p.nome)}</div><div class="p">${esc(p.prezzo)}</div><s>${esc(p.base)}</s>`)).join("");
+}).catch(() => {});
+let V = [], cat = null;
+const disegna = () => {
+  const cats = [...new Set(V.map((p) => p.cat).filter(Boolean))];
+  document.getElementById("chips").innerHTML = cats.map((c) => `<span class="chip ${c === cat ? "on" : ""}" data-c="${esc(c)}">${esc(c)}</span>`).join("");
+  const q = document.getElementById("q").value.trim().toLowerCase();
+  const r = (q || cat) ? V.filter((p) => (!cat || p.cat === cat) && (!q || p.nome.toLowerCase().includes(q))) : null;
+  document.getElementById("arch").innerHTML = !r ? '<p class="vuoto">Cerca o scegli una categoria.</p>'
+    : r.length ? r.map((p) => lnk(p, "riga", `${img(p)}<span>${esc(p.nome)}</span>`)).join("") : '<p class="vuoto">Nessun prodotto trovato.</p>';
+};
+document.getElementById("chips").onclick = (e) => { const c = e.target.dataset.c; if (c) { cat = cat === c ? null : c; disegna(); } };
+document.getElementById("q").oninput = disegna;
 fetch("https://affiliate-automation.noramarket-0f9e.workers.dev/prodotti.json", {cache: "no-store"}).then((r) => r.json()).then((v) => {
-  document.getElementById("elenco").innerHTML = v.length ? v.map((p) => `<a class="scheda" data-asin="${esc(p.asin)}" href="${esc(conTag(p.link))}" rel="sponsored nofollow noopener" target="_blank">
-    ${p.img ? `<img src="${esc(p.img)}" alt="" loading="lazy">` : '<div class="img"></div>'}
-    <div class="testo"><div class="nome">${esc(p.nome)}</div><div class="cta">Vedi su Amazon →</div></div></a>`).join("") : "<p>In arrivo.</p>";
-}).catch(() => { document.getElementById("elenco").innerHTML = "<p>Ricarica la pagina tra poco.</p>"; });
+  V = v;
+  document.getElementById("ultimi").innerHTML = v.length ? v.slice(0, 6).map((p) => lnk(p, "vid", `${img(p)}<div>${esc(p.nome)}<b>Vedi su Amazon →</b></div>`)).join("") : '<p class="vuoto">In arrivo.</p>';
+  disegna();
+}).catch(() => { document.getElementById("ultimi").innerHTML = '<p class="vuoto">Ricarica la pagina tra poco.</p>'; });
 </script></body></html>

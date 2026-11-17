@@ -52,12 +52,14 @@ const conTag = (l) => soc ? String(l).replace("tag=noramarket-21", `tag=noramark
 const interno = (() => { try { const q = new URLSearchParams(location.search).get("io");
   if (q === "1") localStorage.setItem("interno", "1"); if (q === "0") localStorage.removeItem("interno");
   return localStorage.getItem("interno") === "1"; } catch (e) { return false; } })();
-const ev = (t, asin) => { if (interno) return; try { navigator.sendBeacon("https://affiliate-automation.noramarket-0f9e.workers.dev/evento", new Blob([JSON.stringify({t, asin, r: document.referrer || ""})], {type: "text/plain"})); } catch (e) {} };
+let primo = true;
+const ev = (t, asin) => { if (interno) return; try { navigator.sendBeacon("https://affiliate-automation.noramarket-0f9e.workers.dev/evento", new Blob([JSON.stringify({t, asin, r: document.referrer || "", p: t === "click" && primo ? 1 : 0})], {type: "text/plain"})); } catch (e) {} };
 ev("visita");
+addEventListener("pageshow", (e) => { if (e.persisted) { primo = true; ev("visita"); } });  // ritorno da Amazon senza ricarica = nuova visita
 // il click si registra già al tocco: nei browser di Instagram/TikTok l'apertura dell'app Amazon chiude la pagina prima del beacon
 let ultimoClick = 0;
 const segnaClick = (e) => { const a = e.target.closest("a[data-asin]"); if (!a || Date.now() - ultimoClick < 1500) return; ultimoClick = Date.now();
-  ev("click", a.dataset.asin); };
+  ev("click", a.dataset.asin); primo = false; };
 document.addEventListener("pointerdown", segnaClick);
 document.addEventListener("click", segnaClick);
 const lnk = (p, cls, inner) => `<a class="${cls}" data-asin="${esc(p.asin)}" href="${esc(conTag(p.link))}" rel="sponsored nofollow noopener" target="_blank">${inner}</a>`;

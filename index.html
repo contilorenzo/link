@@ -53,17 +53,27 @@ const interno = (() => { try { const q = new URLSearchParams(location.search).ge
   if (q === "1") localStorage.setItem("interno", "1"); if (q === "0") localStorage.removeItem("interno");
   return localStorage.getItem("interno") === "1"; } catch (e) { return false; } })();
 let primo = true;
-const ev = (t, asin) => { if (interno) return; try { navigator.sendBeacon("https://affiliate-automation.noramarket-0f9e.workers.dev/evento", new Blob([JSON.stringify({t, asin, r: document.referrer || "", p: t === "click" && primo ? 1 : 0})], {type: "text/plain"})); } catch (e) {} };
+const ev = (t, asin, x) => { if (interno) return; try { navigator.sendBeacon("https://affiliate-automation.noramarket-0f9e.workers.dev/evento", new Blob([JSON.stringify({t, asin, r: document.referrer || "", p: t === "click" && primo ? 1 : 0, ...x})], {type: "text/plain"})); } catch (e) {} };
+// comportamento anonimo (nessun cookie, nessuno script esterno): scorrimento massimo, secondi sulla pagina, tocchi fuori dai link
+let t0 = Date.now(), maxS = 0, fuori = 0, cliccato = 0, inviato = false;
+const scorri = () => { const h = document.documentElement.scrollHeight - innerHeight; maxS = Math.max(maxS, h <= 0 ? 100 : Math.min(100, Math.round(scrollY / h * 100))); };
+addEventListener("scroll", scorri, {passive: true});
+const invia = () => { if (inviato) return; scorri(); if (Date.now() - t0 < 300) return; inviato = true;
+  ev("eng", "", {s: maxS, d: Math.round((Date.now() - t0) / 1000), f: fuori, c: cliccato}); };
+document.addEventListener("visibilitychange", () => { if (document.visibilityState === "hidden") invia(); });
+addEventListener("pagehide", invia);
 ev("visita");
-addEventListener("pageshow", (e) => { if (e.persisted) { primo = true; ev("visita"); } });  // ritorno da Amazon senza ricarica = nuova visita
+addEventListener("pageshow", (e) => { if (e.persisted) { primo = true; ev("visita"); t0 = Date.now(); maxS = 0; fuori = 0; cliccato = 0; inviato = false; } });  // ritorno da Amazon senza ricarica = nuova visita
 // il click si registra già al tocco: nei browser di Instagram/TikTok l'apertura dell'app Amazon chiude la pagina prima del beacon
 let ultimoClick = 0;
 const segnaClick = (e) => { const a = e.target.closest("a[data-asin]"); if (!a || Date.now() - ultimoClick < 1500) return; ultimoClick = Date.now();
-  ev("click", a.dataset.asin); primo = false; };
+  const sch = [...document.querySelectorAll("a[data-asin]")]; cliccato = 1;
+  ev("click", a.dataset.asin, {pos: sch.indexOf(a)}); primo = false; };
 // tocco = dito giù e su quasi nello stesso punto: lo scorrimento della pagina (pointercancel o dito spostato) non è un click
 let tocco = null;
 document.addEventListener("pointerdown", (e) => { tocco = { x: e.clientX, y: e.clientY, t: Date.now(), a: e.target.closest("a[data-asin]") }; });
 document.addEventListener("pointerup", (e) => { const t = tocco; tocco = null;
+  if (t && !t.a && Date.now() - t.t < 700 && Math.hypot(e.clientX - t.x, e.clientY - t.y) < 10) fuori++;
   if (t && t.a && Date.now() - t.t < 700 && Math.hypot(e.clientX - t.x, e.clientY - t.y) < 10 && e.target.closest("a[data-asin]") === t.a) segnaClick(e); });
 document.addEventListener("pointercancel", () => { tocco = null; });
 document.addEventListener("click", segnaClick);

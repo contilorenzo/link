@@ -60,7 +60,12 @@ addEventListener("pageshow", (e) => { if (e.persisted) { primo = true; ev("visit
 let ultimoClick = 0;
 const segnaClick = (e) => { const a = e.target.closest("a[data-asin]"); if (!a || Date.now() - ultimoClick < 1500) return; ultimoClick = Date.now();
   ev("click", a.dataset.asin); primo = false; };
-document.addEventListener("pointerdown", segnaClick);
+// tocco = dito giù e su quasi nello stesso punto: lo scorrimento della pagina (pointercancel o dito spostato) non è un click
+let tocco = null;
+document.addEventListener("pointerdown", (e) => { tocco = { x: e.clientX, y: e.clientY, t: Date.now(), a: e.target.closest("a[data-asin]") }; });
+document.addEventListener("pointerup", (e) => { const t = tocco; tocco = null;
+  if (t && t.a && Date.now() - t.t < 700 && Math.hypot(e.clientX - t.x, e.clientY - t.y) < 10 && e.target.closest("a[data-asin]") === t.a) segnaClick(e); });
+document.addEventListener("pointercancel", () => { tocco = null; });
 document.addEventListener("click", segnaClick);
 const lnk = (p, cls, inner) => `<a class="${cls}" data-asin="${esc(p.asin)}" href="${esc(conTag(p.link))}" rel="sponsored nofollow noopener" target="_blank">${inner}</a>`;
 const img = (p) => p.img ? `<img src="${esc(p.img)}" alt="" loading="lazy">` : '<div class="img"></div>';
